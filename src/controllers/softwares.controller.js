@@ -71,15 +71,19 @@ export const updateSoftwares = async (req, res) => {
     `
 
     const [results] = await pool.query(querySQL, [nombre, espaciomb, versionsoft, precio, id])
-  
+    
+    //Se intento actualizar un registro con ID inexistente
     if(results.affectedRows == 0){
       return res.status(404).json({
+        status: false,
         message: 'El ID no existe'
       })
+    }else{
+      res.send({
+        status: true,
+        message: "Actualizado correctamente",
+      })
     }
-  
-    //res.send("Actualizado correctamente")
-    res.sendStatus(202)
   }
   catch{
     console.error("No se puede concretar PUT")
@@ -96,11 +100,15 @@ export const deleteSoftwares = async (req, res) => {
     //No se pudo eliminar.................
     if (results.affectedRows == 0){
       return res.status(404).json({
-        message: 'EL ID ENVIADO NO EXISTE'
+        status: false,
+        message: 'El ID enviado NO existe'
+      })
+    }else{ //res.send()-> status 200 OK
+      return res.send({
+        status: true,
+        message: 'Eliminado correctamente'
       })
     }
-
-    res.send({  message: 'Eliminado correctamente' })
   }
   catch{
     console.error("No se puedo croncretar DELETE")
